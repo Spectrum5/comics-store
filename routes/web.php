@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Admin\ComicsController;
+
 // Controllers
 use App\Http\Controllers\Admin\PageController;
 
@@ -23,6 +25,8 @@ Route::get('/', function () {
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');
+
+    Route::resource('comics', ComicsController::class);
 });
 
 Route::middleware('auth')->group(function () {
