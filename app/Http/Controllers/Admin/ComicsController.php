@@ -1,6 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
+
+// controller
+use App\Http\Controllers\Controller;
+
+// utilities
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\comics;
 use App\Http\Requests\StorecomicsRequest;
@@ -15,7 +22,11 @@ class ComicsController extends Controller
      */
     public function index()
     {
-        //
+        $comics = comics::all();
+
+        return view('admin.comics.index', [
+            'comics' => $comics
+        ]);
     }
 
     /**
@@ -25,7 +36,7 @@ class ComicsController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.comics.create');
     }
 
     /**
@@ -36,7 +47,17 @@ class ComicsController extends Controller
      */
     public function store(StorecomicsRequest $request)
     {
-        //
+        $data = $request->validated();
+        $data['slug'] = Str::slug($data['name']);
+
+        if (array_key_exists('image', $data)) {
+            $imagePath = Storage::put('comics', $data['image']);
+            $data['image'] = $imagePath;
+        }
+
+        $newComic = comics::create($data);
+
+        return redirect()->route('admin.comicss.index');
     }
 
     /**
@@ -47,7 +68,7 @@ class ComicsController extends Controller
      */
     public function show(comics $comics)
     {
-        //
+        return view('admin.comics.show', compact('comics'));
     }
 
     /**
@@ -58,7 +79,7 @@ class ComicsController extends Controller
      */
     public function edit(comics $comics)
     {
-        //
+        return view('admin.comics.edit');
     }
 
     /**
@@ -70,7 +91,28 @@ class ComicsController extends Controller
      */
     public function update(UpdatecomicsRequest $request, comics $comics)
     {
-        //
+        $data = $request->validated();
+        $data['slug'] = Str::slug($data['name']);
+
+        if (array_key_exists('delete-image', $data)) {
+            if ($comics->img) {
+                Storage::delete($comics->image);
+                $comics->image = null;
+                $comics->save();
+            }
+        }
+        else if (array_key_exists('image', $data)) {
+            $imagePath = Storage::put('projects', $data['image']);
+            $data['image'] = $imagePath;
+
+            if ($comics->image) {
+                Storage::delete($comics->image);
+            }
+        }
+
+        $comics->update($data);
+        
+        return redirect()->route('admin.comics.index');
     }
 
     /**
@@ -81,6 +123,12 @@ class ComicsController extends Controller
      */
     public function destroy(comics $comics)
     {
-        //
+        if ($comics->image) {
+            Storage::delete($comics->image);
+        }
+
+        $comics->delete();
+
+        return redirect()->route('admin.comics.index');
     }
 }
