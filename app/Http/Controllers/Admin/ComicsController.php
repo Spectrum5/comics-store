@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
+
+// controller
+use App\Http\Controllers\Controller;
 
 use App\Models\comics;
 use App\Http\Requests\StorecomicsRequest;
