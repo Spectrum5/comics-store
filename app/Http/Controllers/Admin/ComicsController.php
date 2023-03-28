@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
-use App\Models\comics;
+use App\Models\Comic;
 use App\Http\Requests\StorecomicsRequest;
 use App\Http\Requests\UpdatecomicsRequest;
 
@@ -22,7 +22,7 @@ class ComicsController extends Controller
      */
     public function index()
     {
-        $comics = comics::all();
+        $comics = Comic::all();
 
         return view('admin.comics.index', [
             'comics' => $comics
@@ -55,7 +55,7 @@ class ComicsController extends Controller
             $data['image'] = $imagePath;
         }
 
-        $newComic = comics::create($data);
+        $newComic = Comic::create($data);
 
         return redirect()->route('admin.comicss.index');
     }
@@ -66,7 +66,7 @@ class ComicsController extends Controller
      * @param  \App\Models\comics  $comics
      * @return \Illuminate\Http\Response
      */
-    public function show(comics $comics)
+    public function show(Comic $comics)
     {
         return view('admin.comics.show', compact('comics'));
     }
@@ -77,7 +77,7 @@ class ComicsController extends Controller
      * @param  \App\Models\comics  $comics
      * @return \Illuminate\Http\Response
      */
-    public function edit(comics $comics)
+    public function edit(Comic $comics)
     {
         return view('admin.comics.edit');
     }
@@ -89,7 +89,7 @@ class ComicsController extends Controller
      * @param  \App\Models\comics  $comics
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatecomicsRequest $request, comics $comics)
+    public function update(UpdatecomicsRequest $request, Comic $comics)
     {
         $data = $request->validated();
         $data['slug'] = Str::slug($data['name']);
@@ -121,7 +121,7 @@ class ComicsController extends Controller
      * @param  \App\Models\comics  $comics
      * @return \Illuminate\Http\Response
      */
-    public function destroy(comics $comics)
+    public function destroy(Comic $comics)
     {
         if ($comics->image) {
             Storage::delete($comics->image);
