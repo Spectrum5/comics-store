@@ -11,16 +11,6 @@
     <div class="container bg-white p-3">
         <h1 class="text-center">Modifica Comic</h1>
 
-        {{-- @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li> -> {{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif --}}
-
         <form action="{{ route('comics.update', $comic->id) }}" method="POST">
             @csrf
 
