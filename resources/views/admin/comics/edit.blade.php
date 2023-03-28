@@ -1,7 +1,9 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div>
-        ciao
+    <div class="container">
+        <form action="{{ route('admin.comics.udate') }}" method="POST">
+        
+        </form>
     </div>
 @endsection
